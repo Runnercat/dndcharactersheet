@@ -1,0 +1,1312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>D&D 5e Character Sheet</title>
+    <style>
+        body {
+            font-family: 'Cinzel', serif;
+            background: url('https://www.transparenttextures.com/patterns/paper.png') repeat;
+            margin: 20px;
+            text-align: center;
+            color: #3c2f2f;
+        }
+        #sheet {
+            max-width: 1400px;
+            margin: 0 auto;
+            background-color: rgba(255, 245, 224, 0.9);
+            padding: 20px;
+            border: 8px solid #8b5a2b;
+            border-image: url('https://www.transparenttextures.com/patterns/medieval-border.png') 8 stretch;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        h1 {
+            color: #8b5a2b;
+            font-size: 36px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+            grid-column: 1 / -1;
+        }
+        h2 {
+            color: #8b5a2b;
+            font-size: 20px;
+            border-bottom: 2px solid #8b5a2b;
+            padding-bottom: 5px;
+            margin: 10px 0;
+        }
+        .section {
+            margin: 0;
+            padding: 15px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border: 2px solid #8b5a2b;
+            border-radius: 8px;
+        }
+        .flex-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        .field {
+            margin: 5px;
+            position: relative;
+            flex: 1 1 120px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #3c2f2f;
+        }
+        input[type="text"], input[type="number"], select {
+            padding: 5px;
+            width: 100%;
+            border: 1px solid #8b5a2b;
+            border-radius: 5px;
+            background-color: #fff5e1;
+            font-family: 'Cinzel', serif;
+            box-sizing: border-box;
+        }
+        .stat-box {
+            text-align: center;
+            flex: 1 1 80px;
+        }
+        .stat-box input[type="number"] {
+            width: 50px;
+            margin: 5px 0;
+        }
+        .modifier {
+            font-size: 16px;
+            font-weight: bold;
+            color: #8b5a2b;
+        }
+        #skills, #saving-throws {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        .skill, .save {
+            display: flex;
+            align-items: center;
+            width: 45%;
+            margin: 5px 0;
+        }
+        #hit-points input[type="number"] {
+            width: 60px;
+        }
+        #spells .spell-slots {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+        #spells .slot-field {
+            width: 80px;
+            text-align: center;
+            margin: 5px;
+        }
+        #spells .slot-field input[type="number"] {
+            width: 40px;
+        }
+        #spells .slot-field span {
+            font-size: 12px;
+            color: #3c2f2f;
+            margin-left: 5px;
+        }
+        #spells textarea {
+            width: 100%;
+            height: 60px;
+            padding: 5px;
+            border: 1px solid #8b5a2b;
+            border-radius: 5px;
+            background-color: #fff5e1;
+            font-family: 'Cinzel', serif;
+        }
+        #spells button, #feats button {
+            padding: 5px 10px;
+            background-color: #8b5a2b;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-family: 'Cinzel', serif;
+            margin-left: 5px;
+        }
+        #spells button:hover, #feats button:hover {
+            background-color: #a97142;
+        }
+        #spells .field input[type="text"],
+        #spells .field select,
+        #feats .field select {
+            margin-bottom: 5px;
+            width: auto;
+            display: inline-block;
+        }
+        #spells .field select, #feats .field select {
+            width: 150px;
+        }
+        #attacks table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff5e1;
+        }
+        #attacks th, #attacks td {
+            border: 1px solid #8b5a2b;
+            padding: 5px;
+            text-align: center;
+        }
+        #attacks select, #attacks input {
+            width: 100%;
+            box-sizing: border-box;
+            background-color: #fff5e1;
+        }
+        #inventory textarea, #proficiencies textarea, #feats textarea, #notes textarea {
+            width: 100%;
+            height: 80px;
+            padding: 5px;
+            border: 1px solid #8b5a2b;
+            border-radius: 5px;
+            background-color: #fff5e1;
+            font-family: 'Cinzel', serif;
+        }
+        #traits textarea {
+            width: 100%;
+            height: 60px;
+            padding: 5px;
+            border: 1px solid #8b5a2b;
+            border-radius: 5px;
+            background-color: #fff5e1;
+        }
+        #conditions div {
+            margin: 5px 0;
+        }
+        #inspiration-btn {
+            padding: 5px 10px;
+            background-color: #8b5a2b;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-family: 'Cinzel', serif;
+        }
+        #inspiration-btn.active {
+            background-color: #a97142;
+        }
+        #currency input[type="number"] {
+            width: 50px;
+        }
+        #save-btn, #load-btn {
+            padding: 8px 16px;
+            margin: 5px;
+            background-color: #8b5a2b;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Cinzel', serif;
+            transition: transform 0.2s;
+        }
+        #save-btn:hover, #load-btn:hover {
+            transform: scale(1.1);
+        }
+        .icon {
+            position: absolute;
+            left: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 18px;
+            color: #8b5a2b;
+        }
+        #crest {
+            font-size: 80px;
+            margin: 0 auto 10px;
+            display: block;
+            color: #8b5a2b;
+            grid-column: 1 / -1;
+        }
+        select[multiple] {
+            width: 100%;
+            background-color: #fff5e1;
+            border: 1px solid #8b5a2b;
+            border-radius: 5px;
+            padding: 5px;
+        }
+        @media (max-width: 1000px) {
+            #sheet {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 600px) {
+            #sheet {
+                grid-template-columns: 1fr;
+            }
+            .field {
+                flex: 1 1 100%;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="sheet">
+        <span id="crest">🛡️</span>
+        <h1>D&D 5e Character Sheet</h1>
+
+        <!-- Character Info -->
+        <div class="section">
+            <h2>Character Info</h2>
+            <div class="flex-row">
+                <div class="field">
+                    <label for="char-name">Name:</label>
+                    <span class="icon">✍️</span>
+                    <input type="text" id="char-name" placeholder="Character Name">
+                </div>
+                <div class="field">
+                    <label for="class">Class:</label>
+                    <span class="icon">⚔️</span>
+                    <input type="text" id="class" placeholder="e.g., Fighter" list="class-list">
+                    <datalist id="class-list">
+                        <option value="Barbarian"><option value="Bard"><option value="Cleric"><option value="Druid">
+                        <option value="Fighter"><option value="Monk"><option value="Paladin"><option value="Ranger">
+                        <option value="Rogue"><option value="Sorcerer"><option value="Warlock"><option value="Wizard">
+                    </datalist>
+                </div>
+                <div class="field">
+                    <label for="level">Level:</label>
+                    <span class="icon">📜</span>
+                    <input type="number" id="level" min="1" max="20" value="1">
+                </div>
+                <div class="field">
+                    <label for="race">Race:</label>
+                    <span class="icon">👤</span>
+                    <input type="text" id="race" placeholder="e.g., High Elf" list="race-list">
+                    <datalist id="race-list">
+                        <option value="Human">
+                        <option value="High Elf"><option value="Wood Elf"><option value="Drow">
+                        <option value="Hill Dwarf"><option value="Mountain Dwarf"><option value="Duergar">
+                        <option value="Lightfoot Halfling"><option value="Stout Halfling">
+                        <option value="Dragonborn">
+                        <option value="Forest Gnome"><option value="Rock Gnome"><option value="Deep Gnome">
+                        <option value="Half-Elf">
+                        <option value="Half-Orc">
+                        <option value="Fiendish Tiefling"><option value="Feral Tiefling">
+                    </datalist>
+                </div>
+                <div class="field">
+                    <label for="speed">Speed:</label>
+                    <span class="icon">🏃</span>
+                    <input type="number" id="speed" min="0" value="30">
+                </div>
+                <div class="field">
+                    <label for="initiative">Initiative:</label>
+                    <span class="icon">⚡</span>
+                    <input type="text" id="initiative" readonly>
+                </div>
+                <div class="field">
+                    <label for="ac">Armor Class:</label>
+                    <span class="icon">🛡️</span>
+                    <input type="number" id="ac" min="0">
+                </div>
+                <div class="field">
+                    <label for="alignment">Alignment:</label>
+                    <span class="icon">⚖️</span>
+                    <select id="alignment">
+                        <option value="LG">Lawful Good</option>
+                        <option value="NG">Neutral Good</option>
+                        <option value="CG">Chaotic Good</option>
+                        <option value="LN">Lawful Neutral</option>
+                        <option value="N">True Neutral</option>
+                        <option value="CN">Chaotic Neutral</option>
+                        <option value="LE">Lawful Evil</option>
+                        <option value="NE">Neutral Evil</option>
+                        <option value="CE">Chaotic Evil</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="background">Background:</label>
+                    <span class="icon">📖</span>
+                    <input type="text" id="background" placeholder="e.g., Acolyte" list="background-list">
+                    <datalist id="background-list">
+                        <option value="Acolyte"><option value="Charlatan"><option value="Criminal"><option value="Entertainer">
+                        <option value="Folk Hero"><option value="Guild Artisan"><option value="Hermit"><option value="Noble">
+                        <option value="Outlander"><option value="Sage"><option value="Sailor"><option value="Soldier">
+                        <option value="Urchin">
+                    </datalist>
+                </div>
+                <div class="field">
+                    <label>Inspiration:</label>
+                    <span class="icon">✨</span>
+                    <button id="inspiration-btn" class="inspiration-btn">Off</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ability Scores & Saving Throws -->
+        <div class="section">
+            <h2>Ability Scores</h2>
+            <div class="flex-row">
+                <div class="stat-box">
+                    <label>Strength</label>
+                    <span class="icon">💪</span>
+                    <input type="number" id="str" min="1" max="30" value="10" data-base="10">
+                    <div class="modifier" id="str-mod">+0</div>
+                </div>
+                <div class="stat-box">
+                    <label>Dexterity</label>
+                    <span class="icon">🤸</span>
+                    <input type="number" id="dex" min="1" max="30" value="10" data-base="10">
+                    <div class="modifier" id="dex-mod">+0</div>
+                </div>
+                <div class="stat-box">
+                    <label>Constitution</label>
+                    <span class="icon">❤️</span>
+                    <input type="number" id="con" min="1" max="30" value="10" data-base="10">
+                    <div class="modifier" id="con-mod">+0</div>
+                </div>
+                <div class="stat-box">
+                    <label>Intelligence</label>
+                    <span class="icon">🧠</span>
+                    <input type="number" id="int" min="1" max="30" value="10" data-base="10">
+                    <div class="modifier" id="int-mod">+0</div>
+                </div>
+                <div class="stat-box">
+                    <label>Wisdom</label>
+                    <span class="icon">👁️</span>
+                    <input type="number" id="wis" min="1" max="30" value="10" data-base="10">
+                    <div class="modifier" id="wis-mod">+0</div>
+                </div>
+                <div class="stat-box">
+                    <label>Charisma</label>
+                    <span class="icon">🎭</span>
+                    <input type="number" id="cha" min="1" max="30" value="10" data-base="10">
+                    <div class="modifier" id="cha-mod">+0</div>
+                </div>
+            </div>
+            <h2>Saving Throws</h2>
+            <div id="saving-throws">
+                <div class="save"><input type="checkbox" id="str-save-prof"><label for="str-save-prof">Strength</label><span id="str-save">+0</span></div>
+                <div class="save"><input type="checkbox" id="dex-save-prof"><label for="dex-save-prof">Dexterity</label><span id="dex-save">+0</span></div>
+                <div class="save"><input type="checkbox" id="con-save-prof"><label for="con-save-prof">Constitution</label><span id="con-save">+0</span></div>
+                <div class="save"><input type="checkbox" id="int-save-prof"><label for="int-save-prof">Intelligence</label><span id="int-save">+0</span></div>
+                <div class="save"><input type="checkbox" id="wis-save-prof"><label for="wis-save-prof">Wisdom</label><span id="wis-save">+0</span></div>
+                <div class="save"><input type="checkbox" id="cha-save-prof"><label for="cha-save-prof">Charisma</label><span id="cha-save">+0</span></div>
+            </div>
+        </div>
+
+        <!-- Skills -->
+        <div class="section">
+            <h2>Skills</h2>
+            <div id="skills">
+                <div class="skill"><input type="checkbox" id="acrobatics-prof"><label for="acrobatics-prof">Acrobatics (Dex)</label><span id="acrobatics">+0</span></div>
+                <div class="skill"><input type="checkbox" id="animal-handling-prof"><label for="animal-handling-prof">Animal Handling (Wis)</label><span id="animal-handling">+0</span></div>
+                <div class="skill"><input type="checkbox" id="arcana-prof"><label for="arcana-prof">Arcana (Int)</label><span id="arcana">+0</span></div>
+                <div class="skill"><input type="checkbox" id="athletics-prof"><label for="athletics-prof">Athletics (Str)</label><span id="athletics">+0</span></div>
+                <div class="skill"><input type="checkbox" id="deception-prof"><label for="deception-prof">Deception (Cha)</label><span id="deception">+0</span></div>
+                <div class="skill"><input type="checkbox" id="history-prof"><label for="history-prof">History (Int)</label><span id="history">+0</span></div>
+                <div class="skill"><input type="checkbox" id="insight-prof"><label for="insight-prof">Insight (Wis)</label><span id="insight">+0</span></div>
+                <div class="skill"><input type="checkbox" id="intimidation-prof"><label for="intimidation-prof">Intimidation (Cha)</label><span id="intimidation">+0</span></div>
+                <div class="skill"><input type="checkbox" id="investigation-prof"><label for="investigation-prof">Investigation (Int)</label><span id="investigation">+0</span></div>
+                <div class="skill"><input type="checkbox" id="medicine-prof"><label for="medicine-prof">Medicine (Wis)</label><span id="medicine">+0</span></div>
+                <div class="skill"><input type="checkbox" id="nature-prof"><label for="nature-prof">Nature (Int)</label><span id="nature">+0</span></div>
+                <div class="skill"><input type="checkbox" id="perception-prof"><label for="perception-prof">Perception (Wis)</label><span id="perception">+0</span></div>
+                <div class="skill"><input type="checkbox" id="performance-prof"><label for="performance-prof">Performance (Cha)</label><span id="performance">+0</span></div>
+                <div class="skill"><input type="checkbox" id="persuasion-prof"><label for="persuasion-prof">Persuasion (Cha)</label><span id="persuasion">+0</span></div>
+                <div class="skill"><input type="checkbox" id="religion-prof"><label for="religion-prof">Religion (Int)</label><span id="religion">+0</span></div>
+                <div class="skill"><input type="checkbox" id="sleight-of-hand-prof"><label for="sleight-of-hand-prof">Sleight of Hand (Dex)</label><span id="sleight-of-hand">+0</span></div>
+                <div class="skill"><input type="checkbox" id="stealth-prof"><label for="stealth-prof">Stealth (Dex)</label><span id="stealth">+0</span></div>
+                <div class="skill"><input type="checkbox" id="survival-prof"><label for="survival-prof">Survival (Wis)</label><span id="survival">+0</span></div>
+            </div>
+        </div>
+
+        <!-- Hit Points -->
+        <div class="section" id="hit-points">
+            <h2>Hit Points</h2>
+            <div class="flex-row">
+                <div class="field">
+                    <label for="hp-max">Max HP:</label>
+                    <span class="icon">🩺</span>
+                    <input type="number" id="hp-max" min="1" readonly>
+                </div>
+                <div class="field">
+                    <label for="hp-current">Current HP:</label>
+                    <span class="icon">💉</span>
+                    <input type="number" id="hp-current" min="0">
+                </div>
+                <div class="field">
+                    <label for="hit-die">Hit Die:</label>
+                    <span class="icon">🎲</span>
+                    <input type="text" id="hit-die" readonly>
+                </div>
+            </div>
+        </div>
+
+        <!-- Spells -->
+        <div class="section" id="spells">
+            <h2>Spells</h2>
+            <div class="flex-row">
+                <div class="field">
+                    <label for="spell-ability">Spellcasting Ability:</label>
+                    <span class="icon">🔮</span>
+                    <select id="spell-ability">
+                        <option value="int">Intelligence</option>
+                        <option value="wis">Wisdom</option>
+                        <option value="cha">Charisma</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="spell-save-dc">Spell Save DC:</label>
+                    <span class="icon">🛡️</span>
+                    <input type="number" id="spell-save-dc" readonly>
+                </div>
+                <div class="field">
+                    <label for="spell-attack">Spell Attack Bonus:</label>
+                    <span class="icon">🔥</span>
+                    <input type="text" id="spell-attack" readonly>
+                </div>
+            </div>
+            <div class="spell-slots">
+                <div class="slot-field"><label>Level 1</label><input type="number" id="spell-slots-1" min="0" readonly value="0"><span id="slots-1-used">0/0</span></div>
+                <div class="slot-field"><label>Level 2</label><input type="number" id="spell-slots-2" min="0" readonly value="0"><span id="slots-2-used">0/0</span></div>
+                <div class="slot-field"><label>Level 3</label><input type="number" id="spell-slots-3" min="0" readonly value="0"><span id="slots-3-used">0/0</span></div>
+                <div class="slot-field"><label>Level 4</label><input type="number" id="spell-slots-4" min="0" readonly value="0"><span id="slots-4-used">0/0</span></div>
+                <div class="slot-field"><label>Level 5</label><input type="number" id="spell-slots-5" min="0" readonly value="0"><span id="slots-5-used">0/0</span></div>
+                <div class="slot-field"><label>Level 6</label><input type="number" id="spell-slots-6" min="0" readonly value="0"><span id="slots-6-used">0/0</span></div>
+                <div class="slot-field"><label>Level 7</label><input type="number" id="spell-slots-7" min="0" readonly value="0"><span id="slots-7-used">0/0</span></div>
+                <div class="slot-field"><label>Level 8</label><input type="number" id="spell-slots-8" min="0" readonly value="0"><span id="slots-8-used">0/0</span></div>
+                <div class="slot-field"><label>Level 9</label><input type="number" id="spell-slots-9" min="0" readonly value="0"><span id="slots-9-used">0/0</span></div>
+            </div>
+            <div class="flex-row">
+                <div class="field">
+                    <label>Cantrips:</label>
+                    <span class="icon">✨</span>
+                    <select id="cantrips-dropdown">
+                        <option value="">Select Cantrip</option>
+                    </select>
+                    <button id="add-cantrip-dropdown">Add</button>
+                    <input type="text" id="cantrip-input" placeholder="Custom Cantrip" list="cantrip-suggestions">
+                    <datalist id="cantrip-suggestions"></datalist>
+                    <input type="text" id="cantrip-damage" placeholder="Damage/Type (e.g., 1d8 fire)">
+                    <button id="add-cantrip-custom">Add Custom</button>
+                </div>
+                <div class="field">
+                    <label>Spells:</label>
+                    <span class="icon">📖</span>
+                    <select id="spells-dropdown">
+                        <option value="">Select Spell</option>
+                    </select>
+                    <select id="spell-level-dropdown">
+                        <option value="1">Level 1</option>
+                        <option value="2">Level 2</option>
+                        <option value="3">Level 3</option>
+                        <option value="4">Level 4</option>
+                        <option value="5">Level 5</option>
+                        <option value="6">Level 6</option>
+                        <option value="7">Level 7</option>
+                        <option value="8">Level 8</option>
+                        <option value="9">Level 9</option>
+                    </select>
+                    <button id="add-spell-dropdown">Add</button>
+                    <input type="text" id="spell-input" placeholder="Custom Spell" list="spell-suggestions">
+                    <datalist id="spell-suggestions"></datalist>
+                    <input type="text" id="spell-damage" placeholder="Damage/Type (e.g., 3d6 fire)">
+                    <select id="spell-level-custom">
+                        <option value="0">Cantrip</option>
+                        <option value="1">Level 1</option>
+                        <option value="2">Level 2</option>
+                        <option value="3">Level 3</option>
+                        <option value="4">Level 4</option>
+                        <option value="5">Level 5</option>
+                        <option value="6">Level 6</option>
+                        <option value="7">Level 7</option>
+                        <option value="8">Level 8</option>
+                        <option value="9">Level 9</option>
+                    </select>
+                    <button id="add-spell-custom">Add Custom</button>
+                </div>
+            </div>
+            <label for="known-cantrips">Known Cantrips:</label>
+            <textarea id="known-cantrips" readonly placeholder="Added cantrips with damage/type"></textarea>
+            <label for="known-spells">Known Spells:</label>
+            <textarea id="known-spells" readonly placeholder="Added spells with damage/type and level"></textarea>
+        </div>
+
+        <!-- Attacks -->
+        <div class="section" id="attacks">
+            <h2>Attacks & Spellcasting</h2>
+            <table>
+                <tr><th>Name</th><th>Attack Bonus</th><th>Damage/Type</th></tr>
+                <tr>
+                    <td><select id="attack-1-name" class="weapon-select"><option value="">Select Weapon</option></select></td>
+                    <td><input type="text" id="attack-1-bonus" readonly></td>
+                    <td><input type="text" id="attack-1-damage" readonly></td>
+                </tr>
+                <tr>
+                    <td><select id="attack-2-name" class="weapon-select"><option value="">Select Weapon</option></select></td>
+                    <td><input type="text" id="attack-2-bonus" readonly></td>
+                    <td><input type="text" id="attack-2-damage" readonly></td>
+                </tr>
+                <tr>
+                    <td><select id="attack-3-name" class="weapon-select"><option value="">Select Weapon</option></select></td>
+                    <td><input type="text" id="attack-3-bonus" readonly></td>
+                    <td><input type="text" id="attack-3-damage" readonly></td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Racial Traits & Proficiencies -->
+        <div class="section">
+            <h2>Racial Traits</h2>
+            <textarea id="racial-traits" readonly placeholder="Racial traits will appear here"></textarea>
+            <h2>Proficiencies</h2>
+            <textarea id="proficiencies-text" placeholder="e.g., Longsword, Light Armor, Thieves’ Tools"></textarea>
+        </div>
+
+        <!-- Inventory & Currency -->
+        <div class="section" id="inventory">
+            <h2>Inventory & Currency</h2>
+            <div class="flex-row" id="currency">
+                <div class="field">
+                    <label for="gold">Gold:</label>
+                    <span class="icon">💰</span>
+                    <input type="number" id="gold" min="0" value="0">
+                </div>
+                <div class="field">
+                    <label for="silver">Silver:</label>
+                    <span class="icon">🥈</span>
+                    <input type="number" id="silver" min="0" value="0">
+                </div>
+                <div class="field">
+                    <label for="copper">Copper:</label>
+                    <span class="icon">🥉</span>
+                    <input type="number" id="copper" min="0" value="0">
+                </div>
+            </div>
+            <textarea id="inventory-text" placeholder="e.g., Longsword, 50 gp, Backpack"></textarea>
+        </div>
+
+        <!-- Feats -->
+        <div class="section" id="feats">
+            <h2>Feats</h2>
+            <div class="flex-row">
+                <div class="field">
+                    <label>Feats:</label>
+                    <span class="icon">🏅</span>
+                    <select id="feats-dropdown">
+                        <option value="">Select Feat</option>
+                    </select>
+                    <button id="add-feat">Add</button>
+                </div>
+            </div>
+            <label for="known-feats">Known Feats:</label>
+            <textarea id="known-feats" readonly placeholder="Selected feats with descriptions"></textarea>
+        </div>
+
+        <!-- Personality & Conditions -->
+        <div class="section" id="conditions">
+            <h2>Personality & Conditions</h2>
+            <div class="field">
+                <label for="personality">Personality Traits:</label>
+                <textarea id="personality" placeholder="e.g., I’m always polite and respectful"></textarea>
+            </div>
+            <div>Conditions: <span id="condition-display">None</span></div>
+            <div>
+                <input type="checkbox" id="blinded"><label for="blinded">Blinded</label>
+                <input type="checkbox" id="deafened"><label for="deafened">Deafened</label>
+                <input type="checkbox" id="poisoned"><label for="poisoned">Poisoned</label>
+                <input type="checkbox" id="stunned"><label for="stunned">Stunned</label>
+                <input type="checkbox" id="paralyzed"><label for="paralyzed">Paralyzed</label>
+            </div>
+            <div class="field">
+                <label for="exhaustion">Exhaustion Level:</label>
+                <span class="icon">💀</span>
+                <select id="exhaustion">
+                    <option value="0">0</option><option value="1">1</option><option value="2">2</option>
+                    <option value="3">3</option><option value="4">4</option><option value="5">5</option>
+                    <option value="6">6</option>
+                </select>
+            </div>
+            <div>Exhaustion Effects: <span id="exhaustion-effects">None</span></div>
+        </div>
+
+        <!-- Notes & Save/Load -->
+        <div class="section">
+            <h2>Notes</h2>
+            <textarea id="notes-text" placeholder="e.g., Met a dragon on Day 3"></textarea>
+            <div class="flex-row">
+                <button id="save-btn">Save</button>
+                <button id="load-btn">Load</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        const stats = ["str", "dex", "con", "int", "wis", "cha"];
+        const skills = {
+            "acrobatics": "dex", "animal-handling": "wis", "arcana": "int", "athletics": "str",
+            "deception": "cha", "history": "int", "insight": "wis", "intimidation": "cha",
+            "investigation": "int", "medicine": "wis", "nature": "int", "perception": "wis",
+            "performance": "cha", "persuasion": "cha", "religion": "int", "sleight-of-hand": "dex",
+            "stealth": "dex", "survival": "wis"
+        };
+        const classHitDice = {
+            "barbarian": 12, "bard": 8, "cleric": 8, "druid": 8, "fighter": 10, "monk": 8,
+            "paladin": 10, "ranger": 10, "rogue": 8, "sorcerer": 6, "warlock": 8, "wizard": 6
+        };
+        const races = {
+            "human": { speed: 30, bonuses: { str: 1, dex: 1, con: 1, int: 1, wis: 1, cha: 1 }, traits: "Versatile: +1 to all ability scores", crest: "🛡️" },
+            "elf": {
+                "high elf": { speed: 30, bonuses: { dex: 2, int: 1 }, traits: "Darkvision, Keen Senses, Fey Ancestry, Trance, Cantrip", crest: "🧝", proficiencies: "Longsword, Shortsword, Shortbow, Longbow" },
+                "wood elf": { speed: 35, bonuses: { dex: 2, wis: 1 }, traits: "Darkvision, Keen Senses, Fey Ancestry, Trance, Fleet of Foot, Mask of the Wild", crest: "🧝", proficiencies: "Longsword, Shortsword, Shortbow, Longbow" },
+                "drow": { speed: 30, bonuses: { dex: 2, cha: 1 }, traits: "Superior Darkvision, Keen Senses, Fey Ancestry, Trance, Sunlight Sensitivity, Drow Magic", crest: "🧝", proficiencies: "Rapier, Shortsword, Hand Crossbow" }
+            },
+            "dwarf": {
+                "hill dwarf": { speed: 25, bonuses: { con: 2, wis: 1 }, traits: "Darkvision, Dwarven Resilience, Stonecunning, +1 HP per level", crest: "⛏️", proficiencies: "Battleaxe, Handaxe, Light Hammer, Warhammer" },
+                "mountain dwarf": { speed: 25, bonuses: { con: 2, str: 2 }, traits: "Darkvision, Dwarven Resilience, Stonecunning, Armor Training", crest: "⛏️", proficiencies: "Battleaxe, Handaxe, Light Hammer, Warhammer, Light Armor, Medium Armor" },
+                "duergar": { speed: 25, bonuses: { con: 2, str: 1 }, traits: "Superior Darkvision, Dwarven Resilience, Sunlight Sensitivity, Duergar Magic", crest: "⛏️", proficiencies: "Battleaxe, Handaxe, Light Hammer, Warhammer" }
+            },
+            "halfling": {
+                "lightfoot": { speed: 25, bonuses: { dex: 2, cha: 1 }, traits: "Lucky, Brave, Halfling Nimbleness, Naturally Stealthy", crest: "👣" },
+                "stout": { speed: 25, bonuses: { dex: 2, con: 1 }, traits: "Lucky, Brave, Halfling Nimbleness, Stout Resilience", crest: "👣" }
+            },
+            "dragonborn": { speed: 30, bonuses: { str: 2, cha: 1 }, traits: "Draconic Ancestry, Breath Weapon, Damage Resistance", crest: "🐉" },
+            "gnome": {
+                "forest gnome": { speed: 25, bonuses: { int: 2, dex: 1 }, traits: "Darkvision, Gnome Cunning, Minor Illusion", crest: "🧙" },
+                "rock gnome": { speed: 25, bonuses: { int: 2, con: 1 }, traits: "Darkvision, Gnome Cunning, Artificer’s Lore, Tinker", crest: "🧙" },
+                "deep gnome": { speed: 25, bonuses: { int: 2, dex: 1 }, traits: "Superior Darkvision, Gnome Cunning, Stone Camouflage", crest: "🧙" }
+            },
+            "half-elf": { speed: 30, bonuses: { cha: 2 }, traits: "Darkvision, Fey Ancestry, Skill Versatility (+2 skills)", crest: "🧝‍♂️" },
+            "half-orc": { speed: 30, bonuses: { str: 2, con: 1 }, traits: "Darkvision, Relentless Endurance, Savage Attacks", crest: "🧌" },
+            "tiefling": {
+                "fiendish": { speed: 30, bonuses: { cha: 2, int: 1 }, traits: "Darkvision, Hellish Resistance, Infernal Legacy", crest: "👹" },
+                "feral": { speed: 30, bonuses: { dex: 2, int: 1 }, traits: "Darkvision, Hellish Resistance, Infernal Legacy", crest: "👹" }
+            }
+        };
+        const backgrounds = {
+            "acolyte": { bonuses: {}, skills: ["insight", "religion"], proficiencies: "Two languages of your choice", traits: "Shelter of the Faithful" },
+            "charlatan": { bonuses: {}, skills: ["deception", "sleight-of-hand"], proficiencies: "Disguise kit, Forgery kit", traits: "False Identity" },
+            "criminal": { bonuses: {}, skills: ["deception", "stealth"], proficiencies: "Gaming set, Thieves’ tools", traits: "Criminal Contact" },
+            "entertainer": { bonuses: {}, skills: ["acrobatics", "performance"], proficiencies: "Disguise kit, One musical instrument", traits: "By Popular Demand" },
+            "folk hero": { bonuses: {}, skills: ["animal-handling", "survival"], proficiencies: "One artisan’s tools, Vehicles (land)", traits: "Rustic Hospitality" },
+            "guild artisan": { bonuses: {}, skills: ["insight", "persuasion"], proficiencies: "One artisan’s tools, One language", traits: "Guild Membership" },
+            "hermit": { bonuses: {}, skills: ["medicine", "religion"], proficiencies: "Herbalism kit, One language", traits: "Discovery" },
+            "noble": { bonuses: {}, skills: ["history", "persuasion"], proficiencies: "One gaming set, One language", traits: "Position of Privilege" },
+            "outlander": { bonuses: {}, skills: ["athletics", "survival"], proficiencies: "One musical instrument, One language", traits: "Wanderer" },
+            "sage": { bonuses: {}, skills: ["arcana", "history"], proficiencies: "Two languages of your choice", traits: "Researcher" },
+            "sailor": { bonuses: {}, skills: ["athletics", "perception"], proficiencies: "Navigator’s tools, Vehicles (water)", traits: "Ship’s Passage" },
+            "soldier": { bonuses: {}, skills: ["athletics", "intimidation"], proficiencies: "One gaming set, Vehicles (land)", traits: "Military Rank" },
+            "urchin": { bonuses: {}, skills: ["sleight-of-hand", "stealth"], proficiencies: "Disguise kit, Thieves’ tools", traits: "City Secrets" }
+        };
+        const classProficiencies = {
+            "barbarian": "Light Armor, Medium Armor, Shields, Simple Weapons, Martial Weapons",
+            "bard": "Light Armor, Simple Weapons, Longsword, Rapier, Shortsword, Hand Crossbow",
+            "cleric": "Light Armor, Medium Armor, Shields, Simple Weapons",
+            "druid": "Light Armor, Medium Armor, Shields (non-metal), Clubs, Daggers, Darts, Javelins, Maces, Quarterstaffs, Scimitars, Sickles, Slings, Spears",
+            "fighter": "All Armor, Shields, Simple Weapons, Martial Weapons",
+            "monk": "Simple Weapons, Shortswords",
+            "paladin": "All Armor, Shields, Simple Weapons, Martial Weapons",
+            "ranger": "Light Armor, Medium Armor, Shields, Simple Weapons, Martial Weapons",
+            "rogue": "Light Armor, Simple Weapons, Hand Crossbows, Longswords, Rapiers, Shortswords",
+            "sorcerer": "Daggers, Darts, Slings, Quarterstaffs, Light Crossbows",
+            "warlock": "Light Armor, Simple Weapons",
+            "wizard": "Daggers, Darts, Slings, Quarterstaffs, Light Crossbows"
+        };
+        const spellSlots = {
+            "barbarian": Array(21).fill([0, 0, 0, 0, 0, 0, 0, 0, 0]),
+            "bard": [
+                [0, 0, 0, 0, 0, 0, 0, 0, 0], [2, 0, 0, 0, 0, 0, 0, 0, 0], [3, 0, 0, 0, 0, 0, 0, 0, 0],
+                [4, 2, 0, 0, 0, 0, 0, 0, 0], [4, 3, 0, 0, 0, 0, 0, 0, 0], [4, 3, 2, 0, 0, 0, 0, 0, 0],
+                [4, 3, 3, 0, 0, 0, 0, 0, 0], [4, 3, 3, 1, 0, 0, 0, 0, 0], [4, 3, 3, 2, 0, 0, 0, 0, 0],
+                [4, 3, 3, 3, 1, 0, 0, 0, 0], [4, 3, 3, 3, 2, 0, 0, 0, 0], [4, 3, 3, 3, 2, 1, 0, 0, 0],
+                [4, 3, 3, 3, 2, 1, 0, 0, 0], [4, 3, 3, 3, 2, 1, 1, 0, 0], [4, 3, 3, 3, 2, 1, 1, 0, 0],
+                [4, 3, 3, 3, 2, 1, 1, 1, 0], [4, 3, 3, 3, 2, 1, 1, 1, 0], [4, 3, 3, 3, 2, 1, 1, 1, 1],
+                [4, 3, 3, 3, 3, 1, 1, 1, 1], [4, 3, 3, 3, 3, 2, 1, 1, 1], [4, 3, 3, 3, 3, 2, 2, 1, 1]
+            ],
+            "cleric": [
+                [0, 0, 0, 0, 0, 0, 0, 0, 0], [2, 0, 0, 0, 0, 0, 0, 0, 0], [3, 0, 0, 0, 0, 0, 0, 0, 0],
+                [4, 2, 0, 0, 0, 0, 0, 0, 0], [4, 3, 0, 0, 0, 0, 0, 0, 0], [4, 3, 2, 0, 0, 0, 0, 0, 0],
+                [4, 3, 3, 0, 0, 0, 0, 0, 0], [4, 3, 3, 1, 0, 0, 0, 0, 0], [4, 3, 3, 2, 0, 0, 0, 0, 0],
+                [4, 3, 3, 3, 1, 0, 0, 0, 0], [4, 3, 3, 3, 2, 0, 0, 0, 0], [4, 3, 3, 3, 2, 1, 0, 0, 0],
+                [4, 3, 3, 3, 2, 1, 0, 0, 0], [4, 3, 3, 3, 2, 1, 1, 0, 0], [4, 3, 3, 3, 2, 1, 1, 0, 0],
+                [4, 3, 3, 3, 2, 1, 1, 1, 0], [4, 3, 3, 3, 2, 1, 1, 1, 0], [4, 3, 3, 3, 2, 1, 1, 1, 1],
+                [4, 3, 3, 3, 3, 1, 1, 1, 1], [4, 3, 3, 3, 3, 2, 1, 1, 1], [4, 3, 3, 3, 3, 2, 2, 1, 1]
+            ],
+            "druid": [
+                [0, 0, 0, 0, 0, 0, 0, 0, 0], [2, 0, 0, 0, 0, 0, 0, 0, 0], [3, 0, 0, 0, 0, 0, 0, 0, 0],
+                [4, 2, 0, 0, 0, 0, 0, 0, 0], [4, 3, 0, 0, 0, 0, 0, 0, 0], [4, 3, 2, 0, 0, 0, 0, 0, 0],
+                [4, 3, 3, 0, 0, 0, 0, 0, 0], [4, 3, 3, 1, 0, 0, 0, 0, 0], [4, 3, 3, 2, 0, 0, 0, 0, 0],
+                [4, 3, 3, 3, 1, 0, 0, 0, 0], [4, 3, 3, 3, 2, 0, 0, 0, 0], [4, 3, 3, 3, 2, 1, 0, 0, 0],
+                [4, 3, 3, 3, 2, 1, 0, 0, 0], [4, 3, 3, 3, 2, 1, 1, 0, 0], [4, 3, 3, 3, 2, 1, 1, 0, 0],
+                [4, 3, 3, 3, 2, 1, 1, 1, 0], [4, 3, 3, 3, 2, 1, 1, 1, 0], [4, 3, 3, 3, 2, 1, 1, 1, 1],
+                [4, 3, 3, 3, 3, 1, 1, 1, 1], [4, 3, 3, 3, 3, 2, 1, 1, 1], [4, 3, 3, 3, 3, 2, 2, 1, 1]
+            ],
+            "fighter": Array(21).fill([0, 0, 0, 0, 0, 0, 0, 0, 0]),
+            "monk": Array(21).fill([0, 0, 0, 0, 0, 0, 0, 0, 0]),
+            "paladin": [
+                [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [2, 0, 0, 0, 0, 0, 0, 0, 0],
+                [3, 0, 0, 0, 0, 0, 0, 0, 0], [3, 0, 0, 0, 0, 0, 0, 0, 0], [4, 2, 0, 0, 0, 0, 0, 0, 0],
+                [4, 2, 0, 0, 0, 0, 0, 0, 0], [4, 3, 0, 0, 0, 0, 0, 0, 0], [4, 3, 0, 0, 0, 0, 0, 0, 0],
+                [4, 3, 2, 0, 0, 0, 0, 0, 0], [4, 3, 2, 0, 0, 0, 0, 0, 0], [4, 3, 3, 0, 0, 0, 0, 0, 0],
+                [4, 3, 3, 0, 0, 0, 0, 0, 0], [4, 3, 3, 1, 0, 0, 0, 0, 0], [4, 3, 3, 1, 0, 0, 0, 0, 0],
+                [4, 3, 3, 2, 0, 0, 0, 0, 0], [4, 3, 3, 2, 0, 0, 0, 0, 0], [4, 4, 3, 2, 1, 0, 0, 0, 0],
+                [4, 4, 3, 2, 1, 0, 0, 0, 0], [4, 4, 3, 2, 2, 0, 0, 0, 0], [4, 4, 3, 3, 2, 1, 0, 0, 0]
+            ],
+            "ranger": [
+                [0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0], [2, 0, 0, 0, 0, 0, 0, 0, 0],
+                [3, 0, 0, 0, 0, 0, 0, 0, 0], [3, 0, 0, 0, 0, 0, 0, 0, 0], [4, 2, 0, 0, 0, 0, 0, 0, 0],
+                [4, 2, 0, 0, 0, 0, 0, 0, 0], [4, 3, 0, 0, 0, 0, 0, 0, 0], [4, 3, 0, 0, 0, 0, 0, 0, 0],
+                [4, 3, 2, 0, 0, 0, 0, 0, 0], [4, 3, 2, 0, 0, 0, 0, 0, 0], [4, 3, 3, 0, 0, 0, 0, 0, 0],
+                [4, 3, 3, 0, 0, 0, 0, 0, 0], [4, 3, 3, 1, 0, 0, 0, 0, 0], [4, 3, 3, 1, 0, 0, 0, 0, 0],
+                [4, 3, 3, 2, 0, 0, 0, 0, 0], [4, 3, 3, 2, 0, 0, 0, 0, 0], [4, 4, 3, 2, 1, 0, 0, 0, 0],
+                [4, 4, 3, 2, 1, 0, 0, 0, 0], [4, 4, 3, 2, 2, 0, 0, 0, 0], [4, 4, 3, 3, 2, 1, 0, 0, 0]
+            ],
+            "rogue": Array(21).fill([0, 0, 0, 0, 0, 0, 0, 0, 0]),
+            "sorcerer": [
+                [0, 0, 0, 0, 0, 0, 0, 0, 0], [2, 0, 0, 0, 0, 0, 0, 0, 0], [3, 0, 0, 0, 0, 0, 0, 0, 0],
+                [4, 2, 0, 0, 0, 0, 0, 0, 0], [4, 3, 0, 0, 0, 0, 0, 0, 0], [4, 3, 2, 0, 0, 0, 0, 0, 0],
+                [4, 3, 3, 0, 0, 0, 0, 0, 0], [4, 3, 3, 1, 0, 0, 0, 0, 0], [4, 3, 3, 2, 0, 0, 0, 0, 0],
+                [4, 3, 3, 3, 1, 0, 0, 0, 0], [4, 3, 3, 3, 2, 0, 0, 0, 0], [4, 3, 3, 3, 2, 1, 0, 0, 0],
+                [4, 3, 3, 3, 2, 1, 0, 0, 0], [4, 3, 3, 3, 2, 1, 1, 0, 0], [4, 3, 3, 3, 2, 1, 1, 0, 0],
+                [4, 3, 3, 3, 2, 1, 1, 1, 0], [4, 3, 3, 3, 2, 1, 1, 1, 0], [4, 3, 3, 3, 2, 1, 1, 1, 1],
+                [4, 3, 3, 3, 3, 1, 1, 1, 1], [4, 3, 3, 3, 3, 2, 1, 1, 1], [4, 3, 3, 3, 3, 2, 2, 1, 1]
+            ],
+            "warlock": [
+                [0, 0, 0, 0, 0, 0, 0, 0, 0], [1, 0, 0, 0, 0, 0, 0, 0, 0], [2, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 2, 0, 0, 0, 0, 0, 0, 0], [0, 2, 0, 0, 0, 0, 0, 0, 0], [0, 0, 2, 0, 0, 0, 0, 0, 0],
+                [0, 0, 2, 0, 0, 0, 0, 0, 0], [0, 0, 0, 2, 0, 0, 0, 0, 0], [0, 0, 0, 2, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 2, 0, 0, 0, 0], [0, 0, 0, 0, 2, 0, 0, 0, 0], [0, 0, 0, 0, 3, 0, 0, 0, 0],
+                [0, 0, 0, 0, 3, 0, 0, 0, 0], [0, 0, 0, 0, 3, 0, 0, 0, 0], [0, 0, 0, 0, 3, 0, 0, 0, 0],
+                [0, 0, 0, 0, 3, 0, 0, 0, 0], [0, 0, 0, 0, 3, 0, 0, 0, 0], [0, 0, 0, 0, 4, 0, 0, 0, 0],
+                [0, 0, 0, 0, 4, 0, 0, 0, 0], [0, 0, 0, 0, 4, 0, 0, 0, 0], [0, 0, 0, 0, 4, 0, 0, 0, 0]
+            ],
+            "wizard": [
+                [0, 0, 0, 0, 0, 0, 0, 0, 0], [2, 0, 0, 0, 0, 0, 0, 0, 0], [3, 0, 0, 0, 0, 0, 0, 0, 0],
+                [4, 2, 0, 0, 0, 0, 0, 0, 0], [4, 3, 0, 0, 0, 0, 0, 0, 0], [4, 3, 2, 0, 0, 0, 0, 0, 0],
+                [4, 3, 3, 0, 0, 0, 0, 0, 0], [4, 3, 3, 1, 0, 0, 0, 0, 0], [4, 3, 3, 2, 0, 0, 0, 0, 0],
+                [4, 3, 3, 3, 1, 0, 0, 0, 0], [4, 3, 3, 3, 2, 0, 0, 0, 0], [4, 3, 3, 3, 2, 1, 0, 0, 0],
+                [4, 3, 3, 3, 2, 1, 0, 0, 0], [4, 3, 3, 3, 2, 1, 1, 0, 0], [4, 3, 3, 3, 2, 1, 1, 0, 0],
+                [4, 3, 3, 3, 2, 1, 1, 1, 0], [4, 3, 3, 3, 2, 1, 1, 1, 0], [4, 3, 3, 3, 2, 1, 1, 1, 1],
+                [4, 3, 3, 3, 3, 1, 1, 1, 1], [4, 3, 3, 3, 3, 2, 1, 1, 1], [4, 3, 3, 3, 3, 2, 2, 1, 1]
+            ]
+        };
+        const exhaustionEffects = [
+            "None",
+            "Disadvantage on ability checks",
+            "Disadvantage on ability checks, Speed halved",
+            "Disadvantage on ability checks, Speed halved, Disadvantage on attack rolls and saving throws",
+            "Disadvantage on ability checks, Speed halved, Disadvantage on attack rolls and saving throws, Hit point maximum halved",
+            "Disadvantage on ability checks, Speed halved, Disadvantage on attack rolls and saving throws, Hit point maximum halved, Speed reduced to 0",
+            "Death"
+        ];
+        const cantripsList = {
+            "Acid Splash": "1d6 acid",
+            "Blade Ward": "None (defense)",
+            "Booming Blade": "1d8 thunder (melee)",
+            "Chill Touch": "1d8 necrotic",
+            "Control Flames": "None (utility)",
+            "Create Bonfire": "1d8 fire",
+            "Dancing Lights": "None (utility)",
+            "Druidcraft": "None (utility)",
+            "Eldritch Blast": "1d10 force",
+            "Fire Bolt": "1d10 fire",
+            "Friends": "None (social)",
+            "Frostbite": "1d6 cold",
+            "Green-Flame Blade": "1d8 fire (melee)",
+            "Guidance": "1d4 (utility)",
+            "Gust": "None (utility)",
+            "Infestation": "1d6 poison",
+            "Light": "None (utility)",
+            "Lightning Lure": "1d8 lightning",
+            "Mage Hand": "None (utility)",
+            "Magic Stone": "1d6 + modifier bludgeoning",
+            "Mending": "None (utility)",
+            "Message": "None (utility)",
+            "Mind Sliver": "1d6 psychic",
+            "Minor Illusion": "None (utility)",
+            "Mold Earth": "None (utility)",
+            "Poison Spray": "1d12 poison",
+            "Prestidigitation": "None (utility)",
+            "Primal Savagery": "1d10 acid",
+            "Produce Flame": "1d8 fire",
+            "Ray of Frost": "1d8 cold",
+            "Resistance": "1d4 (defense)",
+            "Sacred Flame": "1d8 radiant",
+            "Shape Water": "None (utility)",
+            "Shillelagh": "None (melee enhancement)",
+            "Shocking Grasp": "1d8 lightning",
+            "Spare the Dying": "None (healing)",
+            "Sword Burst": "1d6 force",
+            "Thaumaturgy": "None (utility)",
+            "Thorn Whip": "1d6 piercing",
+            "Thunderclap": "1d6 thunder",
+            "Toll the Dead": "1d8 or 1d12 necrotic",
+            "True Strike": "None (utility)",
+            "Vicious Mockery": "1d4 psychic",
+            "Word of Radiance": "1d6 radiant"
+        };
+        const spellsList = {
+            "Absorb Elements": "1d6 elemental (defense)",
+            "Alarm": "None (utility)",
+            "Animal Friendship": "None (control)",
+            "Armor of Agathys": "5 temp HP + 5 cold (defense)",
+            "Bane": "None (debuff)",
+            "Bless": "1d4 (buff)",
+            "Burning Hands": "3d6 fire",
+            "Charm Person": "None (control)",
+            "Chromatic Orb": "3d8 elemental",
+            "Color Spray": "6d10 hp (control)",
+            "Command": "None (control)",
+            "Compelled Duel": "None (control)",
+            "Comprehend Languages": "None (utility)",
+            "Create or Destroy Water": "None (utility)",
+            "Cure Wounds": "1d8 + modifier healing",
+            "Detect Evil and Good": "None (utility)",
+            "Detect Magic": "None (utility)",
+            "Detect Poison and Disease": "None (utility)",
+            "Disguise Self": "None (utility)",
+            "Dissonant Whispers": "3d6 psychic",
+            "Divine Favor": "1d4 radiant",
+            "Ensnaring Strike": "1d6 piercing",
+            "Entangle": "None (control)",
+            "Expeditious Retreat": "None (utility)",
+            "Faerie Fire": "None (utility)",
+            "False Life": "1d4 + 4 temp HP",
+            "Feather Fall": "None (utility)",
+            "Find Familiar": "None (utility)",
+            "Fog Cloud": "None (control)",
+            "Goodberry": "1 HP per berry (healing)",
+            "Grease": "None (control)",
+            "Guiding Bolt": "4d6 radiant",
+            "Hail of Thorns": "1d10 piercing",
+            "Healing Word": "1d4 + modifier healing",
+            "Hellish Rebuke": "2d10 fire",
+            "Heroism": "Temp HP (buff)",
+            "Hideous Laughter": "None (control)",
+            "Hunter’s Mark": "1d6 (tracking)",
+            "Identify": "None (utility)",
+            "Illusory Script": "None (utility)",
+            "Inflict Wounds": "3d10 necrotic",
+            "Jump": "None (utility)",
+            "Longstrider": "None (utility)",
+            "Mage Armor": "None (defense)",
+            "Magic Missile": "1d4+1 force (per dart)",
+            "Protection from Evil and Good": "None (defense)",
+            "Purify Food and Drink": "None (utility)",
+            "Sanctuary": "None (defense)",
+            "Searing Smite": "1d6 fire",
+            "Shield": "None (defense)",
+            "Shield of Faith": "None (defense)",
+            "Silent Image": "None (utility)",
+            "Sleep": "5d8 hp (control)",
+            "Speak with Animals": "None (utility)",
+            "Tasha’s Hideous Laughter": "None (control)",
+            "Tenser’s Floating Disk": "None (utility)",
+            "Thunderous Smite": "2d6 thunder",
+            "Thunderwave": "2d8 thunder",
+            "Unseen Servant": "None (utility)",
+            "Witch Bolt": "1d12 lightning",
+            "Wrathful Smite": "1d6 psychic",
+            "Aid": "5 HP (buff)",
+            "Alter Self": "None (utility)",
+            "Blur": "None (defense)",
+            "Darkness": "None (control)",
+            "Enhance Ability": "None (buff)",
+            "Fireball": "8d6 fire",
+            "Counterspell": "None (utility)",
+            "Dispel Magic": "None (utility)",
+            "Fly": "None (utility)",
+            "Haste": "None (buff)"
+        };
+        const featsList = {
+            "Alert": "+5 initiative, can’t be surprised",
+            "Athlete": "+1 Str or Dex, stand up from prone with 5 ft movement",
+            "Actor": "+1 Cha, mimic speech/sounds",
+            "Charger": "Bonus action dash for attack or push",
+            "Crossbow Expert": "No disadvantage on close range, bonus action attack",
+            "Defensive Duelist": "Add proficiency to AC as reaction (with finesse weapon)",
+            "Dual Wielder": "+1 AC with two weapons, wield non-light weapons",
+            "Dungeon Delver": "Advantage on trap detection/saves",
+            "Durable": "+1 Con, gain max HP on hit die rolls",
+            "Elemental Adept": "Ignore resistance to one damage type",
+            "Grappler": "Advantage on grapple checks, pin grappled foes",
+            "Great Weapon Master": "Bonus action attack on crit/kill, -5/+10 damage option",
+            "Healer": "Heal with healer’s kit, restore 1d6+4+level HP",
+            "Heavy Armor Master": "+1 Str, reduce nonmagical damage by 3",
+            "Inspiring Leader": "Grant temp HP to allies (Cha mod + level)",
+            "Keen Mind": "+1 Int, perfect recall, know time/north",
+            "Lucky": "3 luck points to reroll attacks/saves/checks",
+            "Mage Slayer": "Attack casters as reaction, disrupt concentration",
+            "Magic Initiate": "Learn 2 cantrips and 1st-level spell",
+            "Martial Adept": "Learn 2 maneuvers, 1 superiority die",
+            "Mobile": "+10 ft speed, dash through foes, no opportunity attacks",
+            "Mounted Combatant": "Advantage vs. unmounted foes, protect mount",
+            "Observant": "+1 Int or Wis, +5 passive Perception/Investigation",
+            "Polearm Master": "Bonus action attack with polearm, opportunity attacks",
+            "Resilient": "+1 to one ability, proficiency in its saves",
+            "Ritual Caster": "Learn ritual spells",
+            "Savage Attacker": "Reroll weapon damage once per turn",
+            "Sentinel": "Opportunity attacks stop movement, protect allies",
+            "Sharpshooter": "-5/+10 ranged damage option, ignore cover",
+            "Shield Master": "Shove with shield, better Dex saves",
+            "Skilled": "Proficiency in 3 skills/tools",
+            "Skulker": "Hide when lightly obscured, no disadvantage in dim light",
+            "Spell Sniper": "Double spell range, ignore cover, learn cantrip",
+            "Tavern Brawler": "+1 Str or Con, proficient with improvised weapons",
+            "Tough": "+2 HP per level",
+            "War Caster": "Advantage on concentration, somatic with hands full",
+            "Weapon Master": "+1 Str or Dex, proficiency with 4 weapons"
+        };
+        const weaponsList = {
+            "Dagger": { damage: "1d4 piercing", finesse: true },
+            "Shortsword": { damage: "1d6 piercing", finesse: true },
+            "Longsword": { damage: "1d8 slashing", finesse: false },
+            "Greatsword": { damage: "2d6 slashing", finesse: false },
+            "Rapier": { damage: "1d8 piercing", finesse: true },
+            "Battleaxe": { damage: "1d8 slashing", finesse: false },
+            "Warhammer": { damage: "1d8 bludgeoning", finesse: false },
+            "Crossbow, light": { damage: "1d8 piercing", finesse: false },
+            "Longbow": { damage: "1d8 piercing", finesse: false }
+        };
+
+        // Custom storage
+        let customCantrips = {};
+        let customSpells = {};
+        let customFeats = {};
+        let spellSlotUsage = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0 };
+
+        function getModifier(score) {
+            return Math.floor((score - 10) / 2);
+        }
+
+        function applyRaceBonuses() {
+            const raceInput = document.getElementById("race").value.toLowerCase();
+            let raceData = null;
+            
+            for (const race in races) {
+                if (typeof races[race] === "object" && !races[race].speed) {
+                    for (const subrace in races[race]) {
+                        if (raceInput === subrace) {
+                            raceData = races[race][subrace];
+                            break;
+                        }
+                    }
+                } else if (raceInput === race) {
+                    raceData = races[race];
+                    break;
+                }
+                if (raceData) break;
+            }
+
+            raceData = raceData || { speed: 30, bonuses: {}, traits: "", crest: "🛡️", proficiencies: "" };
+
+            document.getElementById("speed").value = raceData.speed;
+            document.getElementById("speed").dataset.base = raceData.speed;
+            document.getElementById("racial-traits").value = raceData.traits || "No special traits";
+            document.getElementById("crest").textContent = raceData.crest;
+
+            stats.forEach(stat => {
+                const input = document.getElementById(stat);
+                const baseScore = parseInt(input.dataset.base) || 10;
+                const bonus = raceData.bonuses[stat] || 0;
+                input.value = baseScore + bonus;
+            });
+
+            const currentProfs = document.getElementById("proficiencies-text").value.split(", ").filter(p => p);
+            const raceProfs = raceData.proficiencies ? raceData.proficiencies.split(", ") : [];
+            const profsToAdd = raceProfs.filter(p => !currentProfs.includes(p));
+            document.getElementById("proficiencies-text").value = [...currentProfs, ...profsToAdd].join(", ");
+
+            updateSheetWithoutRaceOrBackground();
+        }
+
+        function applyBackgroundBonuses() {
+            const backgroundName = document.getElementById("background").value.toLowerCase();
+            const backgroundData = backgrounds[backgroundName] || { bonuses: {}, skills: [], proficiencies: "", traits: "" };
+            const currentProfs = document.getElementById("proficiencies-text").value.split(", ").filter(p => p);
+            const profsToAdd = backgroundData.proficiencies.split(", ").filter(p => !currentProfs.includes(p));
+            document.getElementById("proficiencies-text").value = [...currentProfs, ...profsToAdd].join(", ");
+            document.getElementById("personality").value = backgroundData.traits || "";
+
+            stats.forEach(stat => {
+                const input = document.getElementById(stat);
+                const baseScore = parseInt(input.dataset.base) || 10;
+                const raceBonus = (races[document.getElementById("race").value.toLowerCase()]?.bonuses[stat]) || 0;
+                const bgBonus = backgroundData.bonuses[stat] || 0;
+                input.value = baseScore + raceBonus + bgBonus;
+            });
+
+            Object.keys(skills).forEach(skill => {
+                if (backgroundData.skills.includes(skill)) {
+                    document.getElementById(`${skill}-prof`).checked = true;
+                }
+            });
+            updateSheetWithoutRaceOrBackground();
+        }
+
+        function applyClassProficiencies() {
+            const className = document.getElementById("class").value.toLowerCase();
+            const classProfs = classProficiencies[className] || "";
+            const currentProfs = document.getElementById("proficiencies-text").value.split(", ").filter(p => p);
+            const profsToAdd = classProfs.split(", ").filter(p => !currentProfs.includes(p));
+            document.getElementById("proficiencies-text").value = [...currentProfs, ...profsToAdd].join(", ");
+            updateSheetWithoutRaceOrBackground();
+        }
+
+        function populateSpellDropdowns() {
+            const cantripsDropdown = document.getElementById("cantrips-dropdown");
+            Object.keys(cantripsList).forEach(cantrip => {
+                const option = document.createElement("option");
+                option.value = cantrip;
+                option.textContent = cantrip;
+                cantripsDropdown.appendChild(option);
+            });
+
+            const spellsDropdown = document.getElementById("spells-dropdown");
+            Object.keys(spellsList).forEach(spell => {
+                const option = document.createElement("option");
+                option.value = spell;
+                option.textContent = spell;
+                spellsDropdown.appendChild(option);
+            });
+
+            const cantripDatalist = document.getElementById("cantrip-suggestions");
+            Object.keys(cantripsList).forEach(cantrip => {
+                const option = document.createElement("option");
+                option.value = cantrip;
+                cantripDatalist.appendChild(option);
+            });
+
+            const spellDatalist = document.getElementById("spell-suggestions");
+            Object.keys(spellsList).forEach(spell => {
+                const option = document.createElement("option");
+                option.value = spell;
+                spellDatalist.appendChild(option);
+            });
+        }
+
+        function updateKnownSpellsAndSlots() {
+            const cantripText = Object.entries(customCantrips)
+                .map(([name, damage]) => `${name}: ${damage}`)
+                .join("\n") || "None added";
+            const spellText = Object.entries(customSpells)
+                .map(([name, { damage, level }]) => `${name}: ${damage} (Level ${level})`)
+                .join("\n") || "None added";
+
+            document.getElementById("known-cantrips").value = cantripText;
+            document.getElementById("known-spells").value = spellText;
+
+            for (let i = 1; i <= 9; i++) {
+                const totalSlots = parseInt(document.getElementById(`spell-slots-${i}`).value) || 0;
+                const usedSlots = spellSlotUsage[i] || 0;
+                document.getElementById(`slots-${i}-used`).textContent = `${usedSlots}/${totalSlots}`;
+            }
+        }
+
+        function updateKnownFeats() {
+            const featText = Object.entries(customFeats)
+                .map(([name, desc]) => `${name}: ${desc}`)
+                .join("\n") || "None selected";
+            document.getElementById("known-feats").value = featText;
+        }
+
+        function populateDropdowns() {
+            populateSpellDropdowns();
+            const featsDropdown = document.getElementById("feats-dropdown");
+            Object.keys(featsList).forEach(feat => {
+                const option = document.createElement("option");
+                option.value = feat;
+                option.textContent = feat;
+                featsDropdown.appendChild(option);
+            });
+            for (let i = 1; i <= 3; i++) {
+                const weaponSelect = document.getElementById(`attack-${i}-name`);
+                Object.keys(weaponsList).forEach(weapon => {
+                    const option = document.createElement("option");
+                    option.value = weapon;
+                    option.textContent = weapon;
+                    weaponSelect.appendChild(option);
+                });
+            }
+        }
+
+        function updateSheetWithoutRaceOrBackground() {
+            let proficiencyBonus = Math.ceil(1 + (parseInt(document.getElementById("level").value) || 1) / 4);
+            const className = document.getElementById("class").value.toLowerCase();
+            const exhaustionLevel = parseInt(document.getElementById("exhaustion").value) || 0;
+
+            stats.forEach(stat => {
+                let score = parseInt(document.getElementById(stat).value) || 10;
+                const mod = getModifier(score);
+                document.getElementById(`${stat}-mod`).textContent = mod >= 0 ? `+${mod}` : mod;
+                const isProficient = document.getElementById(`${stat}-save-prof`).checked;
+                const totalSave = isProficient ? mod + proficiencyBonus : mod;
+                document.getElementById(`${stat}-save`).textContent = totalSave >= 0 ? (exhaustionLevel >= 3 ? `+${totalSave} (Dis)` : `+${totalSave}`) : totalSave;
+            });
+
+            const level = parseInt(document.getElementById("level").value) || 1;
+            let conMod = getModifier(parseInt(document.getElementById("con").value) || 10);
+            const hitDie = classHitDice[className] || 8;
+            document.getElementById("hit-die").value = `d${hitDie}`;
+            let hpMax = hitDie + conMod + ((level - 1) * (Math.floor(hitDie / 2) + 1 + conMod));
+            if (exhaustionLevel >= 4) hpMax = Math.max(1, Math.floor(hpMax / 2));
+            document.getElementById("hp-max").value = hpMax > 0 ? hpMax : 1;
+            let dexMod = getModifier(parseInt(document.getElementById("dex").value) || 10);
+            document.getElementById("initiative").value = dexMod >= 0 ? `+${dexMod}` : dexMod;
+
+            Object.keys(skills).forEach(skill => {
+                const stat = skills[skill];
+                const score = parseInt(document.getElementById(stat).value) || 10;
+                const baseMod = getModifier(score);
+                const isProficient = document.getElementById(`${skill}-prof`).checked;
+                const totalMod = isProficient ? baseMod + proficiencyBonus : baseMod;
+                document.getElementById(skill).textContent = totalMod >= 0 ? (exhaustionLevel >= 1 ? `+${totalMod} (Dis)` : `+${totalMod}`) : totalMod;
+            });
+
+            const slots = spellSlots[className] || spellSlots["fighter"];
+            const cappedLevel = Math.min(level, 20);
+            for (let i = 1; i <= 9; i++) {
+                document.getElementById(`spell-slots-${i}`).value = slots[cappedLevel][i - 1] || 0;
+            }
+            updateKnownSpellsAndSlots();
+
+            const spellAbility = document.getElementById("spell-ability").value;
+            const spellMod = getModifier(parseInt(document.getElementById(spellAbility).value) || 10);
+            const spellSaveDC = 8 + proficiencyBonus + spellMod;
+            const spellAttack = proficiencyBonus + spellMod;
+            document.getElementById("spell-save-dc").value = spellSaveDC;
+            document.getElementById("spell-attack").value = spellAttack >= 0 ? (exhaustionLevel >= 3 ? `+${spellAttack} (Dis)` : `+${spellAttack}`) : spellAttack;
+
+            const acBase = 10 + dexMod;
+            const acInput = parseInt(document.getElementById("ac").value) || acBase;
+            document.getElementById("ac").value = Math.max(acBase, acInput);
+
+            const conditions = ["blinded", "deafened", "poisoned", "stunned", "paralyzed"].filter(c => document.getElementById(c).checked);
+            const conditionDisplay = conditions.length || exhaustionLevel > 0 ? [...conditions, exhaustionLevel > 0 ? `Exhaustion Level ${exhaustionLevel}` : ""].filter(Boolean).join(", ") : "None";
+            document.getElementById("condition-display").textContent = conditionDisplay;
+            document.getElementById("exhaustion-effects").textContent = exhaustionEffects[exhaustionLevel];
+            let baseSpeed = parseInt(document.getElementById("speed").dataset.base) || parseInt(document.getElementById("speed").value) || 30;
+            if (exhaustionLevel >= 2) baseSpeed = Math.floor(baseSpeed / (exhaustionLevel >= 5 ? 100 : 2));
+            document.getElementById("speed").value = Math.max(0, baseSpeed);
+
+            const strMod = getModifier(parseInt(document.getElementById("str").value) || 10);
+            for (let i = 1; i <= 3; i++) {
+                const weaponName = document.getElementById(`attack-${i}-name`).value;
+                if (weaponName && weaponsList[weaponName]) {
+                    const weapon = weaponsList[weaponName];
+                    const attackStat = weapon.finesse ? Math.max(strMod, dexMod) : strMod;
+                    const attackBonus = attackStat + proficiencyBonus;
+                    document.getElementById(`attack-${i}-bonus`).value = attackBonus >= 0 ? (exhaustionLevel >= 3 ? `+${attackBonus} (Dis)` : `+${attackBonus}`) : attackBonus;
+                    document.getElementById(`attack-${i}-damage`).value = weapon.damage;
+                } else {
+                    document.getElementById(`attack-${i}-bonus`).value = "";
+                    document.getElementById(`attack-${i}-damage`).value = "";
+                }
+            }
+        }
+
+        // Event Listeners
+        stats.forEach(stat => {
+            const input = document.getElementById(stat);
+            input.addEventListener("input", () => {
+                input.dataset.base = input.value - ((races[document.getElementById("race").value.toLowerCase()]?.bonuses[stat]) || 0) - ((backgrounds[document.getElementById("background").value.toLowerCase()]?.bonuses[stat]) || 0);
+                updateSheetWithoutRaceOrBackground();
+            });
+            document.getElementById(`${stat}-save-prof`).addEventListener("change", updateSheetWithoutRaceOrBackground);
+        });
+
+        document.getElementById("level").addEventListener("input", updateSheetWithoutRaceOrBackground);
+        document.getElementById("class").addEventListener("input", () => {
+            applyClassProficiencies();
+            updateSheetWithoutRaceOrBackground();
+        });
+        document.getElementById("race").addEventListener("input", applyRaceBonuses);
+        document.getElementById("background").addEventListener("input", applyBackgroundBonuses);
+        document.getElementById("ac").addEventListener("input", updateSheetWithoutRaceOrBackground);
+        document.getElementById("spell-ability").addEventListener("change", updateSheetWithoutRaceOrBackground);
+
+        Object.keys(skills).forEach(skill => {
+            document.getElementById(`${skill}-prof`).addEventListener("change", updateSheetWithoutRaceOrBackground);
+        });
+
+        document.getElementById("inspiration-btn").addEventListener("click", () => {
+            const btn = document.getElementById("inspiration-btn");
+            btn.classList.toggle("active");
+            btn.textContent = btn.classList.contains("active") ? "On" : "Off";
+        });
+
+        ["blinded", "deafened", "poisoned", "stunned", "paralyzed", "exhaustion"].forEach(condition => {
+            document.getElementById(condition).addEventListener("change", updateSheetWithoutRaceOrBackground);
+        });
+
+        document.getElementById("add-cantrip-dropdown").addEventListener("click", () => {
+            const name = document.getElementById("cantrips-dropdown").value;
+            if (name && !customCantrips[name]) {
+                customCantrips[name] = cantripsList[name];
+                document.getElementById("cantrips-dropdown").value = "";
+                updateKnownSpellsAndSlots();
+            }
+        });
+
+        document.getElementById("add-cantrip-custom").addEventListener("click", () => {
+            const name = document.getElementById("cantrip-input").value.trim();
+            const damage = document.getElementById("cantrip-damage").value.trim() || "None (utility)";
+            if (name && !customCantrips[name]) {
+                customCantrips[name] = damage;
+                document.getElementById("cantrip-input").value = "";
+                document.getElementById("cantrip-damage").value = "";
+                updateKnownSpellsAndSlots();
+            }
+        });
+
+        document.getElementById("add-spell-dropdown").addEventListener("click", () => {
+            const name = document.getElementById("spells-dropdown").value;
+            const level = parseInt(document.getElementById("spell-level-dropdown").value);
+            if (name && !customSpells[name]) {
+                customSpells[name] = { damage: spellsList[name], level };
+                spellSlotUsage[level] = (spellSlotUsage[level] || 0) + 1;
+                document.getElementById("spells-dropdown").value = "";
+                updateKnownSpellsAndSlots();
+            }
+        });
+
+        document.getElementById("add-spell-custom").addEventListener("click", () => {
+            const name = document.getElementById("spell-input").value.trim();
+            const damage = document.getElementById("spell-damage").value.trim() || "None (utility)";
+            const level = parseInt(document.getElementById("spell-level-custom").value);
+            if (name) {
+                if (level === 0 && !customCantrips[name]) {
+                    customCantrips[name] = damage;
+                } else if (level > 0 && !customSpells[name]) {
+                    customSpells[name] = { damage, level };
+                    spellSlotUsage[level] = (spellSlotUsage[level] || 0) + 1;
+                }
+                document.getElementById("spell-input").value = "";
+                document.getElementById("spell-damage").value = "";
+                document.getElementById("spell-level-custom").value = "1";
+                updateKnownSpellsAndSlots();
+            }
+        });
+
+        document.getElementById("add-feat").addEventListener("click", () => {
+            const name = document.getElementById("feats-dropdown").value;
+            if (name && !customFeats[name]) {
+                customFeats[name] = featsList[name];
+                document.getElementById("feats-dropdown").value = "";
+                updateKnownFeats();
+            }
+        });
+
+        for (let i = 1; i <= 3; i++) {
+            document.getElementById(`attack-${i}-name`).addEventListener("change", updateSheetWithoutRaceOrBackground);
+        }
+
+        // Initialization
+        document.getElementById("speed").dataset.base = document.getElementById("speed").value;
+        populateDropdowns();
+        updateSheetWithoutRaceOrBackground();
+        updateKnownSpellsAndSlots();
+        updateKnownFeats();
+    </script>
+</body>
+</html>
